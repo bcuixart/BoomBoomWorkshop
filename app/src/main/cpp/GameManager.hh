@@ -164,6 +164,7 @@ private:
 	void DrawScreenNumber(const int score, const Vector2 position, const Color color) const;
 	void DrawResumeNumber(const int number, const Vector2 position, const Color color) const;
 
+	std::string GetSavePath() const;
 	void GetSaveData();
 	void SaveData();
 

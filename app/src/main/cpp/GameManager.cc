@@ -1,5 +1,10 @@
 #include "GameManager.hh"
 
+#ifdef PLATFORM_ANDROID
+#include <android/native_activity.h>
+#include "raymob.h"
+#endif
+
 GameManager* GameManager::instance = nullptr;
 
 GameManager::GameManager()
@@ -1289,9 +1294,18 @@ bool GameManager::PlayerExited() const
     return _playerExited;
 }
 
+std::string GameManager::GetSavePath() const
+{
+#ifdef PLATFORM_ANDROID
+    return std::string(GetAndroidApp()->activity->internalDataPath) + "/save_data.bbw";
+#else
+    return std::string(GetApplicationDirectory()) + SAVE_FILE_PATH;
+#endif
+}
+
 void GameManager::GetSaveData()
 {
-    std::string path = std::string(GetApplicationDirectory()) + SAVE_FILE_PATH;
+    std::string path = GetSavePath();
 
     if (!FileExists(path.c_str()))
     {
@@ -1312,7 +1326,7 @@ void GameManager::GetSaveData()
 
 void GameManager::SaveData()
 {
-    std::string path = std::string(GetApplicationDirectory()) + SAVE_FILE_PATH;
+    std::string path = GetSavePath();
 
     char buffer[16];
     sprintf(buffer, "%d", _highScore);
