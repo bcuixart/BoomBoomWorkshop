@@ -802,7 +802,7 @@ void GameManager::Render(const float deltaTime)
 
     DrawTexturePro(
         _sprSmallScreen, { 0, 0, SMALL_SCREEN_SPRITE_WIDTH, SMALL_SCREEN_SPRITE_HEIGHT },
-        { GetSmallScreenPos(), SMALL_SCREEN_POSITION_Y, SMALL_SCREEN_SPRITE_WIDTH, SMALL_SCREEN_SPRITE_HEIGHT},
+        { GetSmallScreenPosX(), GetSmallScreenPosY(), SMALL_SCREEN_SPRITE_WIDTH, SMALL_SCREEN_SPRITE_HEIGHT},
         { 0, 0 }, 0.0f, WHITE
     );
 
@@ -811,9 +811,9 @@ void GameManager::Render(const float deltaTime)
 	if (_state == MAIN_MENU || _state == MENU_INFO) { numberToDraw = _highScore; numberColor = SMALL_NUMBER_YELLOW_COLOR; }
 	if ((_state == ROUND || _state == ROUND_PAUSED || _state == ROUND_RESUMING || _state == REVIVE_DECISION) && _roundValues.score > _highScore) numberColor = SMALL_NUMBER_YELLOW_COLOR;
     if (_state == GAME_OVER_CUTSCENE || _state == GAME_OVER || _state == POINT_TALLY || _state == POINT_TALLY_DONE) numberToDraw = -1; // -1 to show DEAD
-    DrawScreenNumber(numberToDraw, 
-        { GetSmallScreenPos() + SMALL_SCREEN_NUMBER_POSITION_OFFSET_X,
-        SMALL_SCREEN_POSITION_Y + SMALL_SCREEN_NUMBER_POSITION_OFFSET_Y }, numberColor);
+    DrawScreenNumber(numberToDraw,
+     { GetSmallScreenPosX() + SMALL_SCREEN_NUMBER_POSITION_OFFSET_X,
+       GetSmallScreenPosY() + SMALL_SCREEN_NUMBER_POSITION_OFFSET_Y }, numberColor);
 
 	if (_state == POINT_TALLY || _state == POINT_TALLY_DONE)
 	{
@@ -844,7 +844,7 @@ void GameManager::Render(const float deltaTime)
         DrawRectangleRec({ -maskExtent, maskY, maskExtent + boundsH.x, maskHeight }, BLACK);
         DrawRectangleRec({ boundsH.y,   maskY, maskExtent - boundsH.y, maskHeight }, BLACK);
     }
-    
+
     _gameOverOverlay->Render(deltaTime);
 
     if (_state == MENU_INFO) RenderMenuInfo();
@@ -1192,15 +1192,32 @@ float GameManager::GetBombSpawnPos() const
     return GetHorizontalBounds().y + (float)BOMB_SPAWN_POS_OFFSET;
 }
 
-float GameManager::GetSmallScreenPos() const
+float GameManager::GetScreenBottomWorld() const
 {
-	return GetHorizontalBounds().y + (float)SMALL_SCREEN_POSITION_X_OFFSET;
+    return (GetScreenHeight() / 2.0f) / _cam.zoom;
+}
+
+float GameManager::GetScreenRightWorld() const
+{
+    return (GetScreenWidth() / 2.0f) / _cam.zoom;
+}
+
+float GameManager::GetSmallScreenPosX() const
+{
+    return GetScreenRightWorld() - SMALL_SCREEN_PIXEL_OFFSET_X / _cam.zoom - SMALL_SCREEN_SPRITE_WIDTH;
+}
+
+float GameManager::GetSmallScreenPosY() const
+{
+    return GetScreenBottomWorld() - SMALL_SCREEN_PIXEL_OFFSET_Y / _cam.zoom - SMALL_SCREEN_SPRITE_HEIGHT;
 }
 
 Rectangle GameManager::GetPauseButtonRect() const
 {
-    Vector2 bounds = GetHorizontalBounds();
-    return Rectangle{ bounds.y + (float)PAUSE_BUTTON_POSITION_X_OFFSET, PAUSE_BUTTON_POSITION_Y, PAUSE_BUTTON_SPRITE_SIZE_X, PAUSE_BUTTON_SPRITE_SIZE_Y };
+    float rightEdge = GetSmallScreenPosX() + SMALL_SCREEN_SPRITE_WIDTH;
+    float x = rightEdge - PAUSE_BUTTON_SPRITE_SIZE_X;
+    float y = GetSmallScreenPosY() - PAUSE_BUTTON_PIXEL_OFFSET_Y / _cam.zoom - PAUSE_BUTTON_SPRITE_SIZE_Y;
+    return Rectangle{ x, y, PAUSE_BUTTON_SPRITE_SIZE_X, PAUSE_BUTTON_SPRITE_SIZE_Y };
 }
 
 float GameManager::GetPan(const Vector2& position) const
