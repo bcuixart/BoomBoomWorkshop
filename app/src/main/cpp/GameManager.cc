@@ -832,16 +832,19 @@ void GameManager::Render(const float deltaTime)
     }
 
 	// Gradient and black rectangles on map limits to hide the edges of the map
-	DrawRectangleGradientH(-MAP_BG_COORD_RADIUS_X, -MAP_COORD_RADIUS, 60, MAP_COORD_SIZE, BLACK, { 0, 0, 0, 0 });
-	DrawRectangleGradientH(MAP_BG_COORD_RADIUS_X - 60, -MAP_COORD_RADIUS, 60, MAP_COORD_SIZE, { 0, 0, 0, 0 }, BLACK);
+    if (width >= height)
+    {
+        DrawRectangleGradientH(-MAP_BG_COORD_RADIUS_X, -MAP_COORD_RADIUS, 60, MAP_COORD_SIZE, BLACK, { 0, 0, 0, 0 });
+        DrawRectangleGradientH(MAP_BG_COORD_RADIUS_X - 60, -MAP_COORD_RADIUS, 60, MAP_COORD_SIZE, { 0, 0, 0, 0 }, BLACK);
 
-    Vector2 boundsH = GetHorizontalBounds();
-    const float maskExtent = MAP_BG_COORD_SIZE_X;
-    const float maskY = -MAP_BG_COORD_RADIUS_Y;
-    const float maskHeight = MAP_BG_COORD_SIZE_Y;
-    DrawRectangleRec({ -maskExtent, maskY, maskExtent + boundsH.x, maskHeight }, BLACK);
-    DrawRectangleRec({ boundsH.y,   maskY, maskExtent - boundsH.y, maskHeight }, BLACK);
-
+        Vector2 boundsH = GetHorizontalBounds();
+        const float maskExtent = MAP_BG_COORD_SIZE_X;
+        const float maskY = -MAP_BG_COORD_RADIUS_Y;
+        const float maskHeight = MAP_BG_COORD_SIZE_Y;
+        DrawRectangleRec({ -maskExtent, maskY, maskExtent + boundsH.x, maskHeight }, BLACK);
+        DrawRectangleRec({ boundsH.y,   maskY, maskExtent - boundsH.y, maskHeight }, BLACK);
+    }
+    
     _gameOverOverlay->Render(deltaTime);
 
     if (_state == MENU_INFO) RenderMenuInfo();
