@@ -27,7 +27,9 @@ AudioManager::AudioManager()
 	_bombReleasedMetalSound = LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_BOMB_RELEASED_METAL).c_str());
 	_bombWarningSound = LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_BOMB_WARNING).c_str());
 	_bombHouseTransitionFlashSound = LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_BOMBHOUSE_TRANSITION_FLASH).c_str());
-	for (int i = 0; i < ASSET_SOUND_EXPLOSION_SOUNDS; i++) _explosionSound[i] = LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_BOMB_EXPLOSION).c_str());
+    _bombWindUpBaseSound = LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_BOMB_WINDUP_LOOP).c_str());;
+    _bombFuseBaseSound = LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_BOMB_FUSE_LOOP).c_str());;
+    for (int i = 0; i < ASSET_SOUND_EXPLOSION_SOUNDS; i++) _explosionSound[i] = LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_BOMB_EXPLOSION).c_str());
 	for (int i = 0; i < ASSET_SOUND_POINT_SOUNDS; i++) _pointSound[i] = LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_POINT).c_str());
 	for (int i = 0; i < ASSET_SOUND_POINT_SOUNDS; i++) _pointTallySound[i] = LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_POINT_TALLY).c_str());
 	_gameOverAlertSound = LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_GAMEOVER_ALERT).c_str());
@@ -64,6 +66,8 @@ AudioManager::~AudioManager()
 	UnloadSound(_bombReleasedMetalSound);
 	UnloadSound(_bombWarningSound);
 	UnloadSound(_bombHouseTransitionFlashSound);
+    UnloadSound(_bombWindUpBaseSound);
+    UnloadSound(_bombFuseBaseSound);
 	for (int i = 0; i < ASSET_SOUND_EXPLOSION_SOUNDS; i++) UnloadSound(_explosionSound[i]);
 	for (int i = 0; i < ASSET_SOUND_POINT_SOUNDS; i++) UnloadSound(_pointSound[i]);
 	for (int i = 0; i < ASSET_SOUND_POINT_SOUNDS; i++) UnloadSound(_pointTallySound[i]);
@@ -249,22 +253,22 @@ void AudioManager::PlayPointTallyEndHighScoreSound()
 
 Sound AudioManager::GetBombWindUpLoopSound()
 {
-	return LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_BOMB_WINDUP_LOOP).c_str());
+    return LoadSoundAlias(_bombWindUpBaseSound);
 }
 
 void AudioManager::UnloadBombWindUpLoopSound(Sound* sound)
 {
-	UnloadSound(*sound);
+    UnloadSoundAlias(*sound);
 }
 
 Sound AudioManager::GetBombFuseLoopSound()
 {
-	return LoadSound((std::string(ASSETS_PATH) + ASSET_SOUNDS_PATH + ASSET_SOUND_BOMB_FUSE_LOOP).c_str());
+    return LoadSoundAlias(_bombFuseBaseSound);
 }
 
 void AudioManager::UnloadBombFuseLoopSound(Sound* sound)
 {
-	UnloadSound(*sound);
+    UnloadSoundAlias(*sound);
 }
 
 Sound AudioManager::GetPipeSteamLoopSound()
