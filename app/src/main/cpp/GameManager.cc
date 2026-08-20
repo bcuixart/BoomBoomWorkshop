@@ -768,6 +768,7 @@ void GameManager::Render(const float deltaTime)
 
 
     for (auto& o : _bombGameObjects) o->Render(deltaTime);
+    _bombHouseTop->RenderScreen();
     for (auto& o : _explosionGameObjects) o->Render(deltaTime);
 
     if (DEBUG_DRAW_MAP_BOUNDS)
@@ -792,8 +793,6 @@ void GameManager::Render(const float deltaTime)
         { 0, 0 }, 0.0f, WHITE
     );
 
-    // Screens
-    _bombHouseTop->RenderScreen();
     _bombHouseBottom->RenderScreen();
 
     _pipe->Render(deltaTime);
