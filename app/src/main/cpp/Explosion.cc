@@ -76,11 +76,11 @@ void Explosion::Render(const float deltaTime)
 	float srcX = float(frame % 16) * EXPLOSION_SPRITE_SIZE;
 	float srcY = float(frame / 16) * EXPLOSION_SPRITE_SIZE;
 
-	DrawTexturePro(
-			GameManager::instance->sprExplosion,
-			{ srcX, srcY, EXPLOSION_SPRITE_SIZE, EXPLOSION_SPRITE_SIZE },
-			dest, origin, 0, WHITE
-	);
+    DrawTexturePro(
+            GameManager::instance->sprExplosion,
+            { srcX, srcY, EXPLOSION_SPRITE_SIZE, EXPLOSION_SPRITE_SIZE },
+            dest, origin, 0, { 255, 255, 255, (unsigned char)(255 * (1.0f - animProgress)) }
+    );
 	EndBlendMode();
 	if (GameManager::instance->sprExplosion.id == 0) DrawRectangle(0, 0, 1000, 1000, RED);
 }

@@ -72,10 +72,6 @@ GameManager::GameManager()
 	_pauseState = PAUSE_NONE;
     _pauseDecoVariation = 0;
 
-    #ifdef PLATFORM_ANDROID
-    TraceLog(LOG_INFO, "Save path: %s", GetSavePath().c_str());
-    #endif
-
     GetSaveData();
 
     StartMainMenu();
