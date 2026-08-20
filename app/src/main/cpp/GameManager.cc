@@ -932,6 +932,10 @@ void GameManager::InstantiateExplosion(const Vector2 position)
     _explosionGameObjects.push_back(std::make_unique<Explosion>(position, 0, EXPLOSION_SIZE));
 
     AddScreenShake(EXPLOSION_SCREEN_SHAKE_TIME);
+
+    #ifdef PLATFORM_ANDROID
+    Vibrate(EXPLOSION_VIBRATION_TIME);
+    #endif
 }
 
 void GameManager::DestroyExplosion(Explosion* expl)
@@ -1101,6 +1105,10 @@ void GameManager::HandleBombGrab()
                     audioManager->PlayDramaticDrum();
                     _roundValues.timeForNextDramaticDrum = ROUND_TIME_FOR_DRAMATIC_DRUM;
                     AddScreenShake(DRAMATIC_DRUM_SCREEN_SHAKE_TIME);
+
+                    #ifdef PLATFORM_ANDROID
+                    Vibrate(DRAMATIC_DRUM_VIBRATION_TIME);
+                    #endif
                 }
             }
         }
