@@ -2,6 +2,7 @@
 
 #ifdef PLATFORM_ANDROID
 #include <android/native_activity.h>
+#include <sys/stat.h>
 #include "raymob.h"
 #endif
 
@@ -70,6 +71,10 @@ GameManager::GameManager()
     _menuInfoPage = 0;
 	_pauseState = PAUSE_NONE;
     _pauseDecoVariation = 0;
+
+    #ifdef PLATFORM_ANDROID
+    TraceLog(LOG_INFO, "Save path: %s", GetSavePath().c_str());
+    #endif
 
     GetSaveData();
 
@@ -1332,32 +1337,32 @@ std::string GameManager::GetSavePath() const
 #endif
 }
 
-void GameManager::GetSaveData()
-{
-    std::string path = GetSavePath();
-
-    if (!FileExists(path.c_str()))
-    {
-        _highScore = HIGHSCORE_DEFAULT;
-        return;
-    }
-
-    char* data = LoadFileText(path.c_str());
-    if (data == nullptr)
-    {
-        _highScore = HIGHSCORE_DEFAULT;
-        return;
-    }
-
-    _highScore = atoi(data);
-    UnloadFileText(data);
-}
-
 void GameManager::SaveData()
 {
     std::string path = GetSavePath();
 
-    char buffer[16];
-    sprintf(buffer, "%d", _highScore);
-    SaveFileText(path.c_str(), buffer);
+    FILE* file = fopen(path.c_str(), "w");
+    if (file == nullptr)
+    {
+        TraceLog(LOG_WARNING, "SaveData: failed to open %s", path.c_str());
+        return;
+    }
+    fprintf(file, "%d", _highScore);
+    fclose(file);
+}
+
+void GameManager::GetSaveData()
+{
+    std::string path = GetSavePath();
+
+    FILE* file = fopen(path.c_str(), "r");
+    if (file == nullptr)
+    {
+        _highScore = HIGHSCORE_DEFAULT;
+        return;
+    }
+    fscanf(file, "%d", &_highScore);
+    fclose(file);
+
+    if (_highScore <= 0) _highScore = HIGHSCORE_DEFAULT;
 }
