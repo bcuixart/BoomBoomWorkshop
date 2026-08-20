@@ -94,7 +94,7 @@
 #define MAP_FG_COORD_SIZE_Y (MAP_COORD_SIZE * ((float)MAP_FG_SPRITE_SIZE_Y / (float)MAP_SPRTE_SIZE))
 
 #define DEBUG_DRAW_MAP_BOUNDS false
-#define DEBUG_DRAW_FPS false
+#define DEBUG_DRAW_FPS true
 
 #define SPRTE_TO_COORD(a) ((float)(a) / (float)(MAP_SPRTE_SIZE) * (MAP_COORD_SIZE) - (MAP_COORD_RADIUS))
 
